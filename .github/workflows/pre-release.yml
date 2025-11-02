@@ -7,9 +7,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          repository: hamsaqua/script
+          fetch-depth: 1
+          path: ${{ runner.temp }}/script
+      - uses: actions/checkout@v4
+        with:
           ref: dev
           sparse-checkout: settings.gradle
-      - run: bash .shell/pre-release
+      - run: bash ${{ runner.temp }}/script/app/pre-release
         env:
           DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

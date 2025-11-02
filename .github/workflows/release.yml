@@ -7,8 +7,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          repository: hamsaqua/script
           fetch-depth: 1
-      - run: bash .shell/release
+          path: ${{ runner.temp }}/script
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - run: bash ${{ runner.temp }}/script/app/release
         id: parse
       - uses: wliamp/action/.github/actions/release@main
         with:

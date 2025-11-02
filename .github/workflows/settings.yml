@@ -8,10 +8,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          repository: hamsaqua/script
+          fetch-depth: 1
+          path: ${{ runner.temp }}/script
+      - uses: actions/checkout@v4
+        with:
           fetch-depth: 2
           sparse-checkout: settings.gradle
-      - run: bash .shell/settings
+      - run: bash ${{ runner.temp }}/script/app/settings
         env:
           DOCKERHUB_REPO: ${{ vars.DOCKERHUB_REPO }}
       - uses: wliamp/action/.github/actions/settings@main
