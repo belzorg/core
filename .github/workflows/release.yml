@@ -15,11 +15,11 @@ jobs:
           fetch-depth: 1
       - run: bash ${{ runner.temp }}/script/app/release
         id: parse
-      - uses: hamsaqua/action/.github/actions/release-app@main
+      - uses: hamsaqua/action/.github/actions/release@main
         with:
           scope: ${{ steps.parse.outputs.scope }}
           service: ${{ steps.parse.outputs.service }}
-          version: ${{ steps.parse.outputs.version }}
+          version: ${{ github.sha }}
           docker_user: ${{ vars.DOCKERHUB_USER }}
           docker_repo: ${{ vars.DOCKERHUB_REPO }}
           docker_token: ${{ secrets.DOCKERHUB_TOKEN }}
