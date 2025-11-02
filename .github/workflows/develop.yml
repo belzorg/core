@@ -25,8 +25,8 @@ jobs:
           fetch-depth: 1
           sparse-checkout: |
             ${{ matrix.scope }}/${{ matrix.service }}
-            settings.gradle
-            */build.gradle
+            settings.gradle.kts
+            */build.gradle.kts
             gradle/
             gradlew
       - uses: hamsaqua/action/.github/actions/develop-app@main
@@ -35,7 +35,7 @@ jobs:
           service: ${{ matrix.service }}
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.CONTRACT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.STARTER_PAT }}
     strategy:
       fail-fast: false
       matrix:

@@ -1,0 +1,8 @@
+rootProject.name = "app"
+
+include("banking", "banking:issuer", "banking:acquirer")
+include("clearing-settlement", "clearing-settlement:payment")
+include("compliance-regulatory", "compliance-regulatory:payment")
+include("fraud-risk", "fraud-risk:payment")
+include("payment", "payment:gateway", "payment:processor", "payment:card-network")
+include("shopping", "shopping:merchant")

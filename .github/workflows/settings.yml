@@ -2,7 +2,7 @@ name: Settings
 on:
   push:
     branches: [ main ]
-    paths: [ settings.gradle ]
+    paths: [ settings.gradle.kts ]
 jobs:
   settings:
     steps:
@@ -14,12 +14,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-          sparse-checkout: settings.gradle
+          sparse-checkout: settings.gradle.kts
       - run: bash ${{ runner.temp }}/script/app/settings
         env:
           DOCKERHUB_REPO: ${{ vars.DOCKERHUB_REPO }}
-      - uses: wliamp/action/.github/actions/settings@main
+      - uses: hamsaqua/action/.github/actions/settings-app@main
         with:
-          in_key: ${{ secrets.JAVA_DK }}
-          ex_key: ${{ secrets.JAVA_DEPLOYMENT_DK }}
+          in_key: ${{ secrets.APP_DK }}
+          ex_key: ${{ secrets.APP_DEPLOY_DK }}
     runs-on: ubuntu-latest

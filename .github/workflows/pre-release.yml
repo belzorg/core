@@ -13,12 +13,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: dev
-          sparse-checkout: settings.gradle
+          sparse-checkout: settings.gradle.kts
       - run: bash ${{ runner.temp }}/script/app/pre-release
         env:
+          DOCKERHUB_REPO: ${{ vars.DOCKERHUB_REPO }}
           DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-          DOCKERHUB_REPO: ${{ vars.DOCKERHUB_REPO }}
         id: resolve
     outputs:
       matrix: ${{ steps.resolve.outputs.matrix }}
@@ -28,13 +28,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: dev
-      - uses: wliamp/action/.github/actions/pre-release@main
+      - uses: hamsaqua/action/.github/actions/pre-release-app@main
         with:
           scope: ${{ matrix.scope }}
           service: ${{ matrix.service }}
           version: ${{ matrix.version }}
-          key: ${{ secrets.JAVA_DK }}
-          pat: ${ secrets.JAVA_PAT }}
+          key: ${{ secrets.APP_DK }}
+          pat: ${ secrets.APP_PAT }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.resolve-version.outputs.matrix) }}

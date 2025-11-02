@@ -1,6 +1,6 @@
 name: Release
 on:
-  pull_request:
+  push:
     branches: [ main ]
 jobs:
   release:
@@ -15,7 +15,7 @@ jobs:
           fetch-depth: 1
       - run: bash ${{ runner.temp }}/script/app/release
         id: parse
-      - uses: wliamp/action/.github/actions/release@main
+      - uses: hamsaqua/action/.github/actions/release-app@main
         with:
           scope: ${{ steps.parse.outputs.scope }}
           service: ${{ steps.parse.outputs.service }}
@@ -27,6 +27,5 @@ jobs:
           telegram_token: ${{ secrets.TELEGRAM_TOKEN }}
           telegram: ${{ secrets.TELEGRAM_CHAT_ID }}
           discord: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          pat: ${{ secrets.JAVA_DEPLOYMENT_PAT }}
-    environment: release
+          pat: ${{ secrets.APP_DEPLOY_PAT }}
     runs-on: ubuntu-latest

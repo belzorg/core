@@ -1,21 +1,21 @@
 [versions]
-banking-acquirer = '0.0.1'
-banking-issuer = '0.0.1'
-clearing-settlement-payment = '0.0.1'
-compliance-regulatory-payment = '0.0.1'
-fraud-risk-payment = '0.0.1'
-payment-card-network = '0.0.1'
-payment-gateway = '0.0.1'
-payment-processor = '0.0.1'
-shopping-merchant = '0.0.1'
+banking-acquirer = "0.0.0"
+banking-issuer = "0.0.0"
+clearing-settlement-payment = "0.0.0"
+compliance-regulatory-payment = "0.0.0"
+fraud-risk-payment = "0.0.0"
+payment-card-network = "0.0.0"
+payment-gateway = "0.0.0"
+payment-processor = "0.0.0"
+shopping-merchant = "0.0.0"
 
 [libraries]
-banking-acquirer = { module = 'io.github.wliamp:banking-acquirer', version.ref = 'banking-acquirer' }
-banking-issuer = { module = 'io.github.wliamp:banking-issuer', version.ref = 'banking-issuer' }
-clearing-settlement-payment = { module = 'io.github.wliamp:clearing-settlement-payment', version.ref = 'clearing-settlement-payment' }
-compliance-regulatory-payment = { module = 'io.github.wliamp:compliance-regulatory-payment', version.ref = 'compliance-regulatory-payment' }
-fraud-risk-payment = { module = 'io.github.wliamp:fraud-risk-payment', version.ref = 'fraud-risk-payment' }
-payment-card-network = { module = 'io.github.wliamp:payment-card-network', version.ref = 'payment-card-network' }
-payment-gateway = { module = 'io.github.wliamp:payment-gateway', version.ref = 'payment-gateway' }
-payment-processor = { module = 'io.github.wliamp:payment-processor', version.ref = 'payment-processor' }
-shopping-merchant = { module = 'io.github.wliamp:shopping-merchant', version.ref = 'shopping-merchant' }
+banking-acquirer = { module = "org.hamsaqua:banking-acquirer", version.ref = "banking-acquirer" }
+banking-issuer = { module = "org.hamsaqua:banking-issuer", version.ref = "banking-issuer" }
+clearing-settlement-payment = { module = "org.hamsaqua:clearing-settlement-payment", version.ref = "clearing-settlement-payment" }
+compliance-regulatory-payment = { module = "org.hamsaqua:compliance-regulatory-payment", version.ref = "compliance-regulatory-payment" }
+fraud-risk-payment = { module = "org.hamsaqua:fraud-risk-payment", version.ref = "fraud-risk-payment" }
+payment-card-network = { module = "org.hamsaqua:payment-card-network", version.ref = "payment-card-network" }
+payment-gateway = { module = "org.hamsaqua:payment-gateway", version.ref = "payment-gateway" }
+payment-processor = { module = "org.hamsaqua:payment-processor", version.ref = "payment-processor" }
+shopping-merchant = { module = "org.hamsaqua:shopping-merchant", version.ref = "shopping-merchant" }
