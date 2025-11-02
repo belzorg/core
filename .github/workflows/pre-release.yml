@@ -3,7 +3,7 @@ on:
   schedule:
     - cron: "0 0 * * 1"
 jobs:
-  resolve-version:
+  resolve-image:
     steps:
       - uses: actions/checkout@v4
         with:
@@ -15,13 +15,12 @@ jobs:
           ref: dev
           sparse-checkout: settings.gradle.kts
       - run: bash ${{ runner.temp }}/script/app/pre-release
-        env:
-          DOCKERHUB_REPO: ${{ vars.DOCKERHUB_REPO }}
-          DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
-          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-        id: resolve
+        id: name
+      - run: echo "version=$(date -u +'%Y%m%d')" >> "$GITHUB_OUTPUT"
+        id: version
     outputs:
-      matrix: ${{ steps.resolve.outputs.matrix }}
+      matrix: ${{ steps.name.outputs.matrix }}
+      version: ${{ steps.version.outputs.version }}
     runs-on: ubuntu-latest
   pre-release:
     steps:
@@ -32,11 +31,11 @@ jobs:
         with:
           scope: ${{ matrix.scope }}
           service: ${{ matrix.service }}
-          version: ${{ matrix.version }}
+          version: ${{ needs.resolve-image.outputs.version }}
           key: ${{ secrets.APP_DK }}
-          pat: ${ secrets.APP_PAT }}
+          pat: ${{ secrets.APP_PAT }}
+    needs: resolve-image
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.resolve-version.outputs.matrix) }}
-    needs: resolve-version
+      matrix: ${{ fromJSON(needs.resolve-image.outputs.matrix) }}
     runs-on: ubuntu-latest
