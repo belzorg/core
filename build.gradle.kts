@@ -1,5 +1,8 @@
+import java.lang.System.getenv
+
 val ktor = "3.3.1"
 val resilience4j = "2.3.0"
+val kotest = "5.9.1"
 
 plugins {
     kotlin("jvm") version "2.2.20"
@@ -28,8 +31,8 @@ allprojects {
         maven {
             url = uri("https://maven.pkg.github.com/hamsaqua/starter")
             credentials {
-                username = System.getenv("GITHUB_ACTOR") ?: findProperty("app.actor")?.toString()
-                password = System.getenv("GITHUB_TOKEN") ?: findProperty("app.token")?.toString()
+                username = getenv("GITHUB_ACTOR") ?: findProperty("app.actor")?.toString()
+                password = getenv("GITHUB_TOKEN") ?: findProperty("app.token")?.toString()
             }
         }
     }
@@ -58,8 +61,8 @@ subprojects {
         implementation("io.projectreactor.kafka:reactor-kafka:1.3.24")
         implementation("ch.qos.logback:logback-classic:1.5.13")
         testImplementation("io.ktor:ktor-server-test-host:${ktor}")
-        testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
-        testImplementation("io.kotest:kotest-assertions-core:5.9.1")
+        testImplementation("io.kotest:kotest-runner-junit5:${kotest}")
+        testImplementation("io.kotest:kotest-assertions-core:${kotest}")
         testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
     }
 

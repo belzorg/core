@@ -3,33 +3,37 @@ on:
   pull_request:
     branches: [ dev ]
 jobs:
-  detect-changes:
+  detect:
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
-          repository: hamsaqua/script
-          fetch-depth: 1
-          path: ${{ runner.temp }}/script
-      - uses: actions/checkout@v4
-        with:
+          ref: dev
           fetch-depth: 2
-      - run: bash ${{ runner.temp }}/script/app/develop
-        id: detect
+      - uses: tj-actions/changed-files@v47
+        with:
+          base_branch: dev
+        id: changed
+      - uses: ${{ vars.SCRIPT_REPO }}/.github/actions/${{ vars.DETECT_SCRIPT }}@main
+        with:
+          changed_files: ${{ toJSON(steps.changed.outputs.all_changed_files) }}
+        id: matrix
     outputs:
-      matrix: ${{ steps.detect.outputs.matrix }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    if: startsWith(github.ref_name, 'feature/') ||
+        startsWith(github.ref_name, 'bugfix/') ||
+        startsWith(github.ref_name, 'hotfix/')
     runs-on: ubuntu-latest
   develop:
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
-          fetch-depth: 1
           sparse-checkout: |
             ${{ matrix.scope }}/${{ matrix.service }}
-            settings.gradle.kts
-            */build.gradle.kts
+            **/*.gradle.kts
             gradle/
             gradlew
-      - uses: hamsaqua/action/.github/actions/develop-app@main
+            Dockerfile
+      - uses: ${{ vars.ACTION_REPO }}/.github/actions/${{ vars.DEV_ACTION }}@main
         with:
           scope: ${{ matrix.scope }}
           service: ${{ matrix.service }}
@@ -39,6 +43,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(needs.detect-changes.outputs.matrix) }}
-    needs: detect-changes
+        include: ${{ fromJSON(needs.detect.outputs.matrix) }}
+    needs: detect
     runs-on: ubuntu-latest

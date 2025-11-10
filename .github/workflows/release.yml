@@ -3,23 +3,37 @@ on:
   push:
     branches: [ main ]
 jobs:
+  detect:
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 2
+      - uses: tj-actions/changed-files@v47
+        with:
+          base_branch: main
+        id: changed
+      - uses: ${{ vars.SCRIPT_REPO }}/.github/actions/${{ vars.DETECT_SCRIPT }}@main
+        with:
+          changed_files: ${{ toJSON(steps.changed.outputs.all_changed_files) }}
+        id: matrix
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    if: equals(github.ref_name, 'dev')
+    runs-on: ubuntu-latest
   release:
     steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: hamsaqua/script
-          fetch-depth: 1
-          path: ${{ runner.temp }}/script
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
-      - run: bash ${{ runner.temp }}/script/app/release
-        id: parse
-      - uses: hamsaqua/action/.github/actions/release@main
+      - uses: ${{ vars.ACTION_REPO }}/.github/actions/${{ vars.RELEASE_ACTION }}@main
         with:
-          scope: ${{ steps.parse.outputs.scope }}
-          service: ${{ steps.parse.outputs.service }}
-          version: ${{ github.sha }}
+          scope: ${{ matrix.scope }}
+          service: ${{ matrix.service }}
+          repo: ${{ vars.DEPLOY_REPO }}
+          event: ${{ vars.RELEASE_EVENT }}
+          pat: ${{ secrets.DEPLOY_PAT }}
           docker_user: ${{ vars.DOCKERHUB_USER }}
           docker_repo: ${{ vars.DOCKERHUB_REPO }}
           docker_token: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -27,5 +41,9 @@ jobs:
           telegram_token: ${{ secrets.TELEGRAM_TOKEN }}
           telegram: ${{ secrets.TELEGRAM_CHAT_ID }}
           discord: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          pat: ${{ secrets.APP_DEPLOY_PAT }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.detect.outputs.matrix) }}
+    needs: detect
     runs-on: ubuntu-latest
