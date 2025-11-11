@@ -1,0 +1,21 @@
+name: Initial Scope
+on:
+  repository_dispatch:
+    types: [ initial-scope ]
+jobs:
+  init-scope:
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+        with:
+          repository: ${{ vars.TEMPLATE_REPO }}
+          sparse-checkout: scope
+          path: ${{ runner.temp }}
+      - uses: ${{ vars.SCRIPT_REPO }}/.github/actions/${{ vars.INIT_SCOPE_SCRIPT }}
+        with:
+          scope: ${{ github.event.client_payload.scope }}
+      - uses: ${{ vars.ACTION_REPO }}/.github/actions/${{ vars.INIT_SCOPE_ACTION }}
+        with:
+          scope: ${{ github.event.client_payload.scope }}
+          key: ${{ secrets.SSH }}
+    runs-on: ubuntu-latest

@@ -1,0 +1,25 @@
+name: Initial Service
+on:
+  repository_dispatch:
+    types: [ initial-service ]
+jobs:
+  init-service:
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+        with:
+          repository: ${{ vars.TEMPLATE_REPO }}
+          sparse-checkout: service
+          path: ${{ runner.temp }}
+      - uses: ${{ vars.SCRIPT_REPO }}/.github/actions/${{ vars.INIT_SERVICE_SCRIPT }}
+        with:
+          scope: ${{ github.event.client_payload.scope }}
+          scope_alias: ${{ github.event.client_payload.scope_alias }}
+          service: ${{ github.event.client_payload.service }}
+          alias: ${{ github.event.client_payload.alias }}
+      - uses: ${{ vars.ACTION_REPO }}/.github/actions/${{ vars.INIT_SERVICE_ACTION }}
+        with:
+          scope: ${{ github.event.client_payload.scope }}
+          service: ${{ github.event.client_payload.service }}
+          key: ${{ secrets.SSH }}
+    runs-on: ubuntu-latest

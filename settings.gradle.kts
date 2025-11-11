@@ -1,4 +1,4 @@
-rootProject.name = "app"
+rootProject.name = "release"
 
 include("banking", "banking:issuer", "banking:acquirer")
 include("clearing-settlement", "clearing-settlement:payment")
