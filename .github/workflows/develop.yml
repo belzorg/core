@@ -15,7 +15,7 @@ jobs:
         id: changed
       - uses: ${{ vars.SCRIPT_REPO }}/.github/actions/${{ vars.DETECT_SCRIPT }}@main
         with:
-          changed_files: ${{ toJSON(steps.changed.outputs.all_changed_files) }}
+          changed: ${{ toJSON(steps.changed.outputs.all_changed_files) }}
         id: matrix
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}

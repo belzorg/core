@@ -1,20 +1,20 @@
 name: Settings
 on:
-  repository_dispatch:
-    types: service_initialed
+  workflow_run:
+    workflows: [ Initial Service ]
+    types: [ completed ]
 jobs:
   settings:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
         with:
-          repository: hamsaqua/script
-          fetch-depth: 1
-          path: ${{ runner.temp }}/script
-      - uses: actions/checkout@v4
+          repository: ${{ vars.SUPPORT_REPO }}
+          path: ${{ runner.temp }}
+      - uses: ${{ vars.SCRIPT_REPO }}/.github/actions/${{ vars.SETTINGS_SCRIPT }}@main
+      - uses: ${{ vars.ACTION_REPO }}/.github/actions/${{ vars.SETTINGS_ACTION }}@main
         with:
-          fetch-depth: 2
-      - run: bash ${{ runner.temp }}/script/app/settings
-      - uses: hamsaqua/action/.github/actions/settings@main
-        with:
-          ssh: ${{ secrets.SSH }}
+          release_ssh: ${{ secrets.RELEASE_SSH }}
+          support_ssh: ${{ secrets.SUPPORT_SSH }}
     runs-on: ubuntu-latest

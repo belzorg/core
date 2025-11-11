@@ -6,6 +6,8 @@ jobs:
   init-service:
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: dev
       - uses: actions/checkout@v5
         with:
           repository: ${{ vars.TEMPLATE_REPO }}
@@ -21,5 +23,5 @@ jobs:
         with:
           scope: ${{ github.event.client_payload.scope }}
           service: ${{ github.event.client_payload.service }}
-          key: ${{ secrets.SSH }}
+          ssh: ${{ secrets.RELEASE_SSH }}
     runs-on: ubuntu-latest
