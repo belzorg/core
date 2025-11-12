@@ -1,4 +1,4 @@
-package org.hamsaqua.pay.net
+package payment.card.network
 
 import io.ktor.server.application.*
 import io.ktor.server.cio.*

@@ -1,4 +1,4 @@
-package org.hamsaqua.cs.pay
+package clearing.settlement.payment
 
 import io.ktor.server.application.*
 import io.ktor.server.cio.*

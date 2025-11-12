@@ -13,11 +13,11 @@ jobs:
           repository: ${{ vars.TEMPLATE_REPO }}
           sparse-checkout: scope
           path: ${{ runner.temp }}
-      - uses: ${{ vars.SCRIPT_REPO }}/.github/actions/${{ vars.INIT_SCOPE_SCRIPT }}
+      - uses: ${{ vars.REPO_SCRIPT }}/.github/actions/${{ vars.SCRIPT_INIT_SCOPE }}@main
         with:
           scope: ${{ github.event.client_payload.scope }}
-      - uses: ${{ vars.ACTION_REPO }}/.github/actions/${{ vars.INIT_SCOPE_ACTION }}
+      - uses: ${{ vars.REPO_ACTION }}/.github/actions/${{ vars.ACTION_INIT_SCOPE }}@main
         with:
           scope: ${{ github.event.client_payload.scope }}
-          ssh: ${{ secrets.RELEASE_SSH }}
+          ssh: ${{ secrets.SSH_RELEASE }}
     runs-on: ubuntu-latest

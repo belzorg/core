@@ -1,4 +1,4 @@
-package org.hamsaqua.pay.gtw
+package payment.gateway
 
 import io.ktor.server.application.*
 import io.ktor.server.response.*

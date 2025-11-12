@@ -1,4 +1,4 @@
-package org.hamsaqua.shop.merc
+package shopping.merchant
 
 import io.ktor.server.application.*
 import io.ktor.server.response.*

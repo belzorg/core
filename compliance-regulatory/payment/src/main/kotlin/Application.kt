@@ -1,4 +1,4 @@
-package org.hamsaqua.cr.pay
+package compliance.regulatory.payment
 
 import io.ktor.server.application.*
 import io.ktor.server.cio.*

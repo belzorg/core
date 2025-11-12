@@ -1,4 +1,4 @@
-package org.hamsaqua.bank.aqr
+package banking.acquirer
 
 import io.kotest.core.spec.style.Test
 import io.ktor.client.request.*
@@ -7,7 +7,7 @@ import io.ktor.server.testing.*
 import kotlin.test.*
 
 @Test
-fun testRoot() = testApplication {
+fun test() = testApplication {
     application {
         module()
     }

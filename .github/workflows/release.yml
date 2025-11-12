@@ -12,31 +12,30 @@ jobs:
         with:
           base_branch: main
         id: changed
-      - uses: ${{ vars.SCRIPT_REPO }}/.github/actions/${{ vars.DETECT_SCRIPT }}@main
+      - uses: ${{ vars.REPO_SCRIPT }}/.github/actions/${{ vars.SCRIPT_DETECT }}@main
         with:
           changed: ${{ toJSON(steps.changed.outputs.all_changed_files) }}
         id: matrix
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
-    if: equals(github.ref_name, 'dev')
     runs-on: ubuntu-latest
   release:
     steps:
       - uses: actions/checkout@v5
-      - uses: ${{ vars.ACTION_REPO }}/.github/actions/${{ vars.RELEASE_ACTION }}@main
+      - uses: ${{ vars.REPO_ACTION }}/.github/actions/${{ vars.ACTION_RELEASE }}@main
         with:
           scope: ${{ matrix.scope }}
           service: ${{ matrix.service }}
-          repo: ${{ vars.DEPLOY_REPO }}
-          event: ${{ vars.RELEASE_EVENT }}
-          pat: ${{ secrets.DEPLOY_PAT }}
+          repo: ${{ vars.REPO_DEPLOY }}
+          event: ${{ vars.EVENT_RELEASE }}
           docker_user: ${{ vars.DOCKERHUB_USER }}
           docker_repo: ${{ vars.DOCKERHUB_REPO }}
+          pat: ${{ secrets.PAT_DEPLOY }}
           docker_token: ${{ secrets.DOCKERHUB_TOKEN }}
-          slack: ${{ secrets.SLACK_WEBHOOK_URL }}
+          slack: ${{ secrets.SLACK_WEBHOOK }}
           telegram_token: ${{ secrets.TELEGRAM_TOKEN }}
-          telegram: ${{ secrets.TELEGRAM_CHAT_ID }}
-          discord: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          telegram: ${{ secrets.TELEGRAM_CHAT }}
+          discord: ${{ secrets.DISCORD_WEBHOOK }}
     strategy:
       fail-fast: false
       matrix:

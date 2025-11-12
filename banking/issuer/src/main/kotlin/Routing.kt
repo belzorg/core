@@ -1,4 +1,4 @@
-package org.hamsaqua.bank.iss
+package banking.issuer
 
 import io.ktor.server.application.*
 import io.ktor.server.response.*

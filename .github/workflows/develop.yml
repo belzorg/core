@@ -13,15 +13,15 @@ jobs:
         with:
           base_branch: dev
         id: changed
-      - uses: ${{ vars.SCRIPT_REPO }}/.github/actions/${{ vars.DETECT_SCRIPT }}@main
+      - uses: ${{ vars.REPO_SCRIPT }}/.github/actions/${{ vars.SCRIPT_DETECT }}@main
         with:
           changed: ${{ toJSON(steps.changed.outputs.all_changed_files) }}
         id: matrix
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
     if: startsWith(github.ref_name, 'feature/') ||
-        startsWith(github.ref_name, 'bugfix/') ||
-        startsWith(github.ref_name, 'hotfix/')
+      startsWith(github.ref_name, 'bugfix/') ||
+      startsWith(github.ref_name, 'hotfix/')
     runs-on: ubuntu-latest
   develop:
     steps:
@@ -33,13 +33,13 @@ jobs:
             gradle/
             gradlew
             Dockerfile
-      - uses: ${{ vars.ACTION_REPO }}/.github/actions/${{ vars.DEV_ACTION }}@main
+      - uses: ${{ vars.REPO_ACTION }}/.github/actions/${{ vars.ACTION_DEVELOP }}@main
         with:
           scope: ${{ matrix.scope }}
           service: ${{ matrix.service }}
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.STARTER_PAT }}
+          GITHUB_TOKEN: ${{ secrets.PAT_BUNDLE }}
     strategy:
       fail-fast: false
       matrix:

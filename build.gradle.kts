@@ -3,10 +3,14 @@ import java.lang.System.getenv
 val ktor = "3.3.1"
 val resilience4j = "2.3.0"
 val kotest = "5.9.1"
+val actor = getenv("ACTOR") ?: findProperty("actor")?.toString()
+val org = getenv("ORG") ?: findProperty("org.bundle")?.toString()
+val repo = getenv("REPO") ?: findProperty("repo.bundle.name")?.toString()
+val token = getenv("TOKEN") ?: findProperty("repo.bundle.pat")?.toString()
 
 plugins {
     kotlin("jvm") version "2.2.20"
-    id("io.ktor.plugin") version "3.3.1"
+    id("io.ktor.plugin") version ktor
     jacoco
 }
 
@@ -29,10 +33,10 @@ allprojects {
         maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers")
         maven("https://packages.confluent.io/maven/")
         maven {
-            url = uri("https://maven.pkg.github.com/hamsaqua/starter")
+            url = uri("https://maven.pkg.github.com/${org}/${repo}")
             credentials {
-                username = getenv("GITHUB_ACTOR") ?: findProperty("app.actor")?.toString()
-                password = getenv("GITHUB_TOKEN") ?: findProperty("app.token")?.toString()
+                username = actor
+                password = token
             }
         }
     }
@@ -76,6 +80,7 @@ subprojects {
         reports {
             xml.required.set(true)
             html.required.set(true)
+            csv.required.set(true)
         }
     }
 }

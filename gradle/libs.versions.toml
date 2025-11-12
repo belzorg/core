@@ -10,12 +10,12 @@ payment-processor = "0.0.0"
 shopping-merchant = "0.0.0"
 
 [libraries]
-banking-acquirer = { module = "org.hamsaqua:banking-acquirer", version.ref = "banking-acquirer" }
-banking-issuer = { module = "org.hamsaqua:banking-issuer", version.ref = "banking-issuer" }
-clearing-settlement-payment = { module = "org.hamsaqua:clearing-settlement-payment", version.ref = "clearing-settlement-payment" }
-compliance-regulatory-payment = { module = "org.hamsaqua:compliance-regulatory-payment", version.ref = "compliance-regulatory-payment" }
-fraud-risk-payment = { module = "org.hamsaqua:fraud-risk-payment", version.ref = "fraud-risk-payment" }
-payment-card-network = { module = "org.hamsaqua:payment-card-network", version.ref = "payment-card-network" }
-payment-gateway = { module = "org.hamsaqua:payment-gateway", version.ref = "payment-gateway" }
-payment-processor = { module = "org.hamsaqua:payment-processor", version.ref = "payment-processor" }
-shopping-merchant = { module = "org.hamsaqua:shopping-merchant", version.ref = "shopping-merchant" }
+banking-acquirer = { module = "internal.release:banking-acquirer", version.ref = "banking-acquirer" }
+banking-issuer = { module = "internal.release:banking-issuer", version.ref = "banking-issuer" }
+clearing-settlement-payment = { module = "internal.release:clearing-settlement-payment", version.ref = "clearing-settlement-payment" }
+compliance-regulatory-payment = { module = "internal.release:compliance-regulatory-payment", version.ref = "compliance-regulatory-payment" }
+fraud-risk-payment = { module = "internal.release:fraud-risk-payment", version.ref = "fraud-risk-payment" }
+payment-card-network = { module = "internal.release:payment-card-network", version.ref = "payment-card-network" }
+payment-gateway = { module = "internal.release:payment-gateway", version.ref = "payment-gateway" }
+payment-processor = { module = "internal.release:payment-processor", version.ref = "payment-processor" }
+shopping-merchant = { module = "internal.release:shopping-merchant", version.ref = "shopping-merchant" }

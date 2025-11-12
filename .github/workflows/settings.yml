@@ -8,13 +8,15 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: dev
       - uses: actions/checkout@v5
         with:
-          repository: ${{ vars.SUPPORT_REPO }}
+          repository: ${{ vars.REPO_SUPPORT }}
           path: ${{ runner.temp }}
-      - uses: ${{ vars.SCRIPT_REPO }}/.github/actions/${{ vars.SETTINGS_SCRIPT }}@main
-      - uses: ${{ vars.ACTION_REPO }}/.github/actions/${{ vars.SETTINGS_ACTION }}@main
+      - uses: ${{ vars.REPO_SCRIPT }}/.github/actions/${{ vars.SCRIPT_SETTINGS }}@main
+      - uses: ${{ vars.REPO_ACTION }}/.github/actions/${{ vars.ACTION_SETTINGS }}@main
         with:
-          release_ssh: ${{ secrets.RELEASE_SSH }}
-          support_ssh: ${{ secrets.SUPPORT_SSH }}
+          release_ssh: ${{ secrets.SSH_RELEASE }}
+          support_ssh: ${{ secrets.SSH_SUPPORT }}
     runs-on: ubuntu-latest

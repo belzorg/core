@@ -1,4 +1,4 @@
-package org.hamsaqua.fr.pay
+package fraud.risk.payment
 
 import io.ktor.server.application.*
 import io.ktor.server.response.*

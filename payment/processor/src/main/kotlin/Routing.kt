@@ -1,4 +1,4 @@
-package org.hamsaqua.pay.pro
+package payment.processor
 
 import io.ktor.server.application.*
 import io.ktor.server.response.*

@@ -1,4 +1,4 @@
-package org.hamsaqua.bank.aqr
+package banking.acquirer
 
 import io.ktor.server.application.*
 import io.ktor.server.response.*
