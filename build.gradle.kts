@@ -10,7 +10,7 @@ val token = getenv("TOKEN") ?: findProperty("repo.bundle.pat")?.toString()
 
 plugins {
     kotlin("jvm") version "2.2.20"
-    id("io.ktor.plugin") version ktor
+    id("io.ktor.plugin") version "3.3.1"
     jacoco
 }
 
@@ -53,7 +53,6 @@ subprojects {
         implementation("io.ktor:ktor-server-content-negotiation-jvm:${ktor}")
         implementation("io.ktor:ktor-server-metrics-micrometer-jvm:${ktor}")
         implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:${ktor}")
-        implementation("io.ktor:ktor-server-content-negotiation-jvm:${ktor}")
         implementation("io.micrometer:micrometer-registry-prometheus:1.15.5")
         implementation("io.github.resilience4j:resilience4j-kotlin:${resilience4j}")
         implementation("io.github.resilience4j:resilience4j-retry:${resilience4j}")
