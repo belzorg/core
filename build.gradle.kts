@@ -1,85 +1,72 @@
 import java.lang.System.getenv
 
-val ktor = "3.3.1"
-val resilience4j = "2.3.0"
-val kotest = "5.9.1"
+val kotest = "6.1.3"
+
+val tld = getenv("TLD") ?: "com"
+val org = getenv("ORG") ?: "wliamp"
+val tag = getenv("TAG") ?: "0.0.1-SNAPSHOT"
+val repo = getenv("REPO") ?: "core"
 val actor = getenv("ACTOR") ?: findProperty("actor")?.toString()
-val org = getenv("ORG") ?: findProperty("org.bundle")?.toString()
-val repo = getenv("REPO") ?: findProperty("repo.bundle.name")?.toString()
-val token = getenv("TOKEN") ?: findProperty("repo.bundle.pat")?.toString()
+val token = getenv("TOKEN") ?: findProperty("repo.pat.core")?.toString()
 
 plugins {
-    kotlin("jvm") version "2.2.20"
-    id("io.ktor.plugin") version "3.3.1"
-    jacoco
-}
-
-application {
-    mainClass.set("io.ktor.server.netty.EngineMain")
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
+    kotlin("jvm") version "2.3.10" apply false
+    id("io.spring.dependency-management") version "1.1.7"
+    `maven-publish`
 }
 
 allprojects {
+    group = "$tld.$org"
+    version = tag
+
     repositories {
         mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
-        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
-        maven("https://jitpack.io")
-        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers")
-        maven("https://packages.confluent.io/maven/")
-        maven {
-            url = uri("https://maven.pkg.github.com/${org}/${repo}")
-            credentials {
-                username = actor
-                password = token
-            }
-        }
     }
 }
 
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "io.ktor.plugin")
-    apply(plugin = "jacoco")
+    apply(plugin = "maven-publish")
+
+    extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> {
+        jvmToolchain(21)
+        compilerOptions {
+            freeCompilerArgs.addAll(
+                "-Xjsr305=strict",
+                "-Xannotation-default-target=param-property"
+            )
+        }
+    }
 
     dependencies {
-        implementation("io.ktor:ktor-server-core-jvm:${ktor}")
-        implementation("io.ktor:ktor-server-cio-jvm:${ktor}")
-        implementation("io.ktor:ktor-server-content-negotiation-jvm:${ktor}")
-        implementation("io.ktor:ktor-server-metrics-micrometer-jvm:${ktor}")
-        implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:${ktor}")
-        implementation("io.micrometer:micrometer-registry-prometheus:1.15.5")
-        implementation("io.github.resilience4j:resilience4j-kotlin:${resilience4j}")
-        implementation("io.github.resilience4j:resilience4j-retry:${resilience4j}")
-        implementation("io.github.resilience4j:resilience4j-circuitbreaker:${resilience4j}")
-        implementation("io.github.resilience4j:resilience4j-reactor:${resilience4j}")
-        implementation("io.r2dbc:r2dbc-pool:1.0.2.RELEASE")
-        implementation("io.r2dbc:r2dbc-postgresql:0.8.13.RELEASE")
-        implementation("io.lettuce:lettuce-core:7.0.0.RELEASE")
-        implementation("io.projectreactor.kafka:reactor-kafka:1.3.24")
-        implementation("ch.qos.logback:logback-classic:1.5.13")
-        testImplementation("io.ktor:ktor-server-test-host:${ktor}")
-        testImplementation("io.kotest:kotest-runner-junit5:${kotest}")
-        testImplementation("io.kotest:kotest-assertions-core:${kotest}")
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
+        add("implementation", "org.jetbrains.kotlin:kotlin-reflect")
+        add("testImplementation", "io.kotest:kotest-runner-junit5:$kotest")
+        add("testImplementation", "io.kotest:kotest-assertions-core:$kotest")
+        add("testRuntimeOnly", "org.junit.platform:junit-platform-launcher")
     }
 
-    tasks.test {
+    tasks.withType<Test>().configureEach {
         useJUnitPlatform()
-        finalizedBy(tasks.jacocoTestReport)
     }
 
-    tasks.jacocoTestReport {
-        dependsOn(tasks.test)
-        reports {
-            xml.required.set(true)
-            html.required.set(true)
-            csv.required.set(true)
+    publishing {
+        publications {
+            create<MavenPublication>("core") {
+                from(components["java"])
+                groupId = project.group.toString()
+                artifactId = project.path
+                version = project.version.toString()
+            }
+        }
+
+        repositories {
+            maven {
+                url = uri("https://maven.pkg.github.com/$org/$repo")
+                credentials {
+                    username = actor
+                    password = token
+                }
+            }
         }
     }
 }

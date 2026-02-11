@@ -1,13 +1,12 @@
-name: Develop
+name: Publish
 on:
   pull_request:
-    branches: [ dev ]
+    branches: [ main ]
 jobs:
   detect:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: dev
           fetch-depth: 2
       - uses: tj-actions/changed-files@v47
         with:
@@ -19,8 +18,7 @@ jobs:
         id: matrix
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
-    if: startsWith(github.ref_name, 'feature/') ||
-      startsWith(github.ref_name, 'bugfix/')
+    if: startsWith(github.ref_name, 'dev')
     runs-on: ubuntu-latest
   develop:
     steps:
@@ -32,9 +30,15 @@ jobs:
             gradlew
             build.gradle.kts
             settings.gradle.kts
-      - uses: ${{ vars.REPO_ACTION }}/.github/actions/${{ vars.ACTION_DEVELOP }}@main
+      - uses: ${{ vars.REPO_ACTION }}/.github/actions/${{ vars.ACTION_PUBLISH }}@main
         with:
           service: ${{ matrix.name }}
+          tld: ${{ vars.TLD }}
+          org: ${{ vars.ORG }}
+          core_repo: ${{ vars.REPO_CORE }}
+          event: ${{ vars.EVENT }}
+          core_pat: ${{ secrets.PAT_CORE }}
+          pat: ${{ secrets.PAT }}
     strategy:
       fail-fast: false
       matrix:
