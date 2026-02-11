@@ -33,11 +33,9 @@ jobs:
         with:
           service: ${{ matrix.name }}
           tld: ${{ vars.TLD }}
-          org: ${{ vars.ORG }}
-          core_repo: ${{ vars.REPO_CORE }}
           event: ${{ vars.EVENT }}
           core_pat: ${{ secrets.PAT_CORE }}
-          pat: ${{ secrets.PAT }}
+          pat: ${{ secrets.PAT_GLOBAL }}
     strategy:
       fail-fast: false
       matrix:
