@@ -102,6 +102,7 @@ gitGraph
 - **Required**
     - `signed commit`
     - `pull request`
+        - required approvals: 1
         - dismiss stale approvals when new commits are pushed
         - conversation resolution before merging
         - allowed merge: *Squash*
