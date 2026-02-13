@@ -1,6 +1,6 @@
 name: Publish
 on:
-  push:
+  pull_request:
     branches: [ main ]
 jobs:
   detect:
@@ -16,8 +16,8 @@ jobs:
         id: matrix
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
-    if: startsWith(github.ref_name, 'dev') ||
-      startsWith(github.ref_name, 'hotfix/')
+    if: startsWith(github.head_ref, 'dev') ||
+      startsWith(github.head_ref, 'hotfix/')
     runs-on: ubuntu-latest
   publish:
     steps:

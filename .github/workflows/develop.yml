@@ -10,8 +10,6 @@ jobs:
           ref: dev
           fetch-depth: 2
       - uses: tj-actions/changed-files@v47
-        with:
-          base_branch: dev
         id: changed
       - uses: ${{ vars.REPO_SCRIPT }}/.github/actions/${{ vars.SCRIPT_DETECT }}@main
         with:
@@ -19,8 +17,8 @@ jobs:
         id: matrix
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
-    if: startsWith(github.ref_name, 'feature/') ||
-      startsWith(github.ref_name, 'bugfix/')
+    if: startsWith(github.head_ref, 'feature/') ||
+      startsWith(github.head_ref, 'bugfix/')
     runs-on: ubuntu-latest
   develop:
     steps:

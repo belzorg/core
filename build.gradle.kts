@@ -2,12 +2,15 @@ import java.lang.System.getenv
 
 val kotest = "6.1.3"
 
-val tld = getenv("TLD") ?: "com"
-val org = getenv("ORG") ?: "wliamp"
-val tag = getenv("TAG") ?: "0.0.1-SNAPSHOT"
-val repo = getenv("REPO") ?: "core"
-val actor = getenv("ACTOR") ?: findProperty("actor")?.toString()
-val token = getenv("TOKEN") ?: findProperty("repo.pat.core")?.toString()
+fun envOrProp(env: String, prop: String = env, def: String = ""): String =
+    getenv(env) ?: (findProperty(prop) as String?) ?: def
+
+val tld = envOrProp("TLD", "core.tld", "core")
+val org = envOrProp("ORG", "core.org", "team")
+val tag = envOrProp("TAG", "core.tag", "0.0.1-SNAPSHOT")
+val repo = envOrProp("REPO", "core.repo", "repository")
+val actor = envOrProp("ACTOR", "core.actor", "username")
+val token = envOrProp("TOKEN", "core.token", "password")
 
 plugins {
     kotlin("jvm") version "2.3.10" apply false
@@ -68,5 +71,21 @@ subprojects {
                 }
             }
         }
+    }
+}
+
+tasks.register("listModules") {
+    doLast {
+        println(
+            rootProject
+                .subprojects
+                .map { it.name }
+                .sorted()
+                .joinToString(
+                    prefix = "[\"",
+                    postfix = "\"]",
+                    separator = "\",\""
+                )
+        )
     }
 }
