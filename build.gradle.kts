@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import java.lang.System.getenv
 
 val kotest = "6.1.3"
@@ -31,7 +32,7 @@ subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "maven-publish")
 
-    extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> {
+    extensions.configure<KotlinJvmProjectExtension> {
         jvmToolchain(21)
         compilerOptions {
             freeCompilerArgs.addAll(
@@ -81,11 +82,7 @@ tasks.register("listModules") {
                 .subprojects
                 .map { it.name }
                 .sorted()
-                .joinToString(
-                    prefix = "[\"",
-                    postfix = "\"]",
-                    separator = "\",\""
-                )
+                .joinToString("\",\"", "[\"", "\"]")
         )
     }
 }

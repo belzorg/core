@@ -7,35 +7,46 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          fetch-depth: 2
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
       - uses: tj-actions/changed-files@v47
         id: changed
-      - uses: ${{ vars.REPO_SCRIPT }}/.github/actions/${{ vars.SCRIPT_DETECT }}@main
+      - uses: $OWNER/$REPO/.github/actions/$SCRIPT@main
         with:
           changed: ${{ toJSON(steps.changed.outputs.all_changed_files) }}
         id: matrix
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
-    if: startsWith(github.head_ref, 'dev') ||
+    env:
+      OWNER: ${{ github.repository_owner }}
+      REPO: ${{ vars.REPO_SCRIPT }}
+      SCRIPT: ${{ vars.SCRIPT_DETECT }}
+    if: github.head_ref == 'dev' ||
       startsWith(github.head_ref, 'hotfix/')
     runs-on: ubuntu-latest
   publish:
     steps:
       - uses: actions/checkout@v5
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           sparse-checkout: |
             ${{ matrix.name }}
             gradle/
             gradlew
             build.gradle.kts
             settings.gradle.kts
-      - uses: ${{ vars.REPO_ACTION }}/.github/actions/${{ vars.ACTION_PUBLISH }}@main
+      - uses: $OWNER/$REPO/.github/actions/$ACTION@main
         with:
-          service: ${{ matrix.name }}
+          module: ${{ matrix.name }}
           tld: ${{ vars.TLD }}
           event: ${{ vars.EVENT }}
           core_pat: ${{ secrets.PAT_CORE }}
-          pat: ${{ secrets.PAT_GLOBAL }}
+          adapters_pat: ${{ secrets.PAT_ADAPTERS }}
+    env:
+      OWNER: ${{ github.repository_owner }}
+      REPO: ${{ vars.REPO_SCRIPT }}
+      ACTION: ${{ vars.ACTION_PUBLISH }}
+      MODULE: ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
