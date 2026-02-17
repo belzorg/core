@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import java.lang.System.getenv
+import org.gradle.api.tasks.testing.Test
+import org.gradle.testing.jacoco.tasks.JacocoReport
 
 val kotest = "6.1.3"
 
@@ -16,6 +18,7 @@ val token = envOrProp("TOKEN", "core.token", "password")
 plugins {
     kotlin("jvm") version "2.3.10" apply false
     id("io.spring.dependency-management") version "1.1.7"
+    jacoco
     `maven-publish`
 }
 
@@ -51,6 +54,15 @@ subprojects {
 
     tasks.withType<Test>().configureEach {
         useJUnitPlatform()
+        finalizedBy(tasks.withType<JacocoReport>())
+    }
+
+    tasks.withType<JacocoReport>().configureEach {
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+            csv.required.set(true)
+        }
     }
 
     publishing {

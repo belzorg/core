@@ -1,1 +1,1 @@
-package compliance.regulatory.payment
+package io.github.wliamp.core.cpl.reg.pay

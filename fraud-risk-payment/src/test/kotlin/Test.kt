@@ -1,1 +1,1 @@
-package compliance.regulatory.payment
+package io.github.wliamp.core.fraud.risk.pay

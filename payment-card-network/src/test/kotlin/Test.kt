@@ -1,1 +1,1 @@
-package payment.card.network
+package io.github.wliamp.core.pay.card.net

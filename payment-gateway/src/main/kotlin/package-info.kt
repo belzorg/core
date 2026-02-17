@@ -1,1 +1,1 @@
-package payment.gateway
+package io.github.wliamp.core.pay.gate

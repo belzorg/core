@@ -1,1 +1,1 @@
-package banking.issuer
+package io.github.wliamp.core.bank.iss

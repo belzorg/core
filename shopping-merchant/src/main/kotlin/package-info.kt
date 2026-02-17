@@ -1,1 +1,1 @@
-package shopping.merchant
+package io.github.wliamp.core.shop.mech

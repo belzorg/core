@@ -55,37 +55,6 @@ Create a Pull Request from `dev` → `main`.
 After approval and merge:
 Artifact publishing pipeline is triggered.
 
-### 📊 Visual
-
-```mermaid
-gitGraph
-    commit id: "main init - core skeleton"
-    branch dev
-    checkout dev
-    commit id: "setup: hexagonal structure (domain, port, usecase)"
-    branch feature/payment-usecase
-    checkout feature/payment-usecase
-    commit id: "feat(domain): add Payment aggregate"
-    commit id: "feat(usecase): implement AuthorizePaymentUseCase"
-    commit id: "feat(port): define PaymentRepositoryPort"
-    commit id: "refactor(domain): extract Money value object"
-    checkout dev
-    merge feature/payment-usecase id: "merge feature/payment-usecase"
-    branch bugfix/invalid-amount-validation
-    checkout bugfix/invalid-amount-validation
-    commit id: "fix(domain): validate negative payment amount"
-    commit id: "test(domain): add Payment validation tests"
-    checkout dev
-    merge bugfix/invalid-amount-validation id: "merge bugfix"
-    checkout main
-    merge dev id: "publish core v0.1.0"
-    branch hotfix/breaking-api-signature
-    checkout hotfix/breaking-api-signature
-    commit id: "fix(port): restore backward-compatible method signature"
-    checkout main
-    merge hotfix/breaking-api-signature id: "publish hotfix v0.1.1"
-```
-
 ---
 
 # 🛡 Branch Protection Rules
@@ -97,7 +66,7 @@ gitGraph
 
 ### ⚙️ Workflows
 
-- **Applied** `main` |`dev`
+- **Applied** `dev`
 - **Restrict** `creations` | `deletions` | `force pushes`
 - **Required**
     - `signed commit`
@@ -108,6 +77,7 @@ gitGraph
         - allowed merge: *Squash*
     - `status checks`
         - up to date before merging
+        - to pass: *develop*
 
 ### ✍️ Working
 

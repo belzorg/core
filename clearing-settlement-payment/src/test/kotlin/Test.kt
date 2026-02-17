@@ -1,1 +1,1 @@
-package clearing.settlement.payment
+package io.github.wliamp.core.clear.settle.pay
