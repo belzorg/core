@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import java.lang.System.getenv
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testing.jacoco.tasks.JacocoReport
+import java.io.File
 
 val kotest = "6.1.3"
 
@@ -57,6 +58,52 @@ subprojects {
         finalizedBy(tasks.withType<JacocoReport>())
     }
 
+    val forbiddenCoreImports = listOf(
+        "org.springframework",
+        "jakarta.persistence",
+        "javax.persistence",
+        "org.hibernate",
+        "org.jooq",
+        "org.mybatis",
+        "org.apache.kafka",
+        "io.grpc",
+        "retrofit2",
+        "okhttp3",
+        "org.springframework.web",
+        "org.springframework.data",
+        "software.amazon.awssdk",
+        "com.mongodb",
+        "redis.clients"
+    )
+
+    tasks.register("verifyHexagonalCoreBoundary") {
+        group = "verification"
+        description = "Fails when non-core (infrastructure/framework) logic leaks into the core modules."
+
+        doLast {
+            val sourceFiles = fileTree(projectDir) {
+                include("src/main/kotlin/**/*.kt")
+                include("src/main/java/**/*.java")
+                exclude("**/package-info.kt")
+            }.files
+
+            val violations = sourceFiles.flatMap { source ->
+                findForbiddenImports(source, projectDir, forbiddenCoreImports)
+            }
+
+            if (violations.isNotEmpty()) {
+                val details = violations.joinToString("\n") { " - $it" }
+                throw GradleException(
+                    "Found non-core logic in module '${project.name}'. Keep this repository pure core (hexagonal domain + ports).\n$details"
+                )
+            }
+        }
+    }
+
+    tasks.named("check") {
+        dependsOn("verifyHexagonalCoreBoundary")
+    }
+
     tasks.withType<JacocoReport>().configureEach {
         reports {
             xml.required.set(true)
@@ -85,6 +132,28 @@ subprojects {
             }
         }
     }
+}
+
+fun findForbiddenImports(source: File, baseDir: File, forbiddenPrefixes: List<String>): List<String> {
+    val results = mutableListOf<String>()
+
+    source.readLines().forEachIndexed { index, rawLine ->
+        val line = rawLine.trim()
+        if (!line.startsWith("import ")) return@forEachIndexed
+
+        val importedSymbol = line
+            .removePrefix("import ")
+            .removeSuffix(";")
+            .trim()
+
+        forbiddenPrefixes
+            .firstOrNull { importedSymbol.startsWith(it) }
+            ?.let { forbidden ->
+                results.add("${source.relativeTo(baseDir)}:${index + 1} -> '$importedSymbol' matches forbidden prefix '$forbidden'")
+            }
+    }
+
+    return results
 }
 
 tasks.register("listModules") {
