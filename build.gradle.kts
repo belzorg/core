@@ -143,6 +143,7 @@ fun findForbiddenImports(source: File, baseDir: File, forbiddenPrefixes: List<St
 
         val importedSymbol = line
             .removePrefix("import ")
+            .removePrefix("static ")
             .removeSuffix(";")
             .trim()
 
