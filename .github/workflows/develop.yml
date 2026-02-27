@@ -41,7 +41,7 @@ jobs:
           module: ${{ matrix.name }}
     env:
       OWNER: ${{ github.repository_owner }}
-      REPO: ${{ vars.REPO_SCRIPT }}
+      REPO: ${{ vars.REPO_ACTION }}
       ACTION: ${{ vars.ACTION_DEVELOP }}
       MODULE: ${{ matrix.name }}
     strategy:

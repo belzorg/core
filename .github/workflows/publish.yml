@@ -40,11 +40,13 @@ jobs:
           module: ${{ matrix.name }}
           tld: ${{ vars.TLD }}
           event: ${{ vars.EVENT }}
-          core_pat: ${{ secrets.PAT_CORE }}
-          adapters_pat: ${{ secrets.PAT_ADAPTERS }}
+          gh_app_id: ${{ vars.GH_APP_ID_REPO_DISPATCH }}
+          gh_app_pk: ${{ secrets.GH_APP_PK_REPO_DISPATCH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     env:
       OWNER: ${{ github.repository_owner }}
-      REPO: ${{ vars.REPO_SCRIPT }}
+      REPO: ${{ vars.REPO_ACTION }}
       ACTION: ${{ vars.ACTION_PUBLISH }}
       MODULE: ${{ matrix.name }}
     strategy:
@@ -52,4 +54,7 @@ jobs:
       matrix:
         include: ${{ fromJSON(needs.detect.outputs.matrix) }}
     needs: detect
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
